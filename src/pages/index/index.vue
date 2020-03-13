@@ -6,7 +6,7 @@
         .flex-1.df-col-ac.px-10p.border-right(@click="toLineUpShop('delivery')")
           .icon-delivery
           .mt-10p.text-black 我的借阅
-        .flex-1.df-col-ac.px-10p.border-right(@click="toLineUpShop('delivery')")
+        .flex-1.df-col-ac.px-10p.border-right(@click="toLinelibrary")
           .icon-qrcode
           .mt-10p.text-black 出示二维码
         .flex-1.df-col-ac.px-10p.border-right(@click="toLineUpShop('queue')")
@@ -97,6 +97,11 @@
       }
     },
     methods: {
+      toLinelibrary () {
+        wx.navigateTo({
+          url: '/pages/applyQrcode/main'
+        })
+      },
       getlibrarys () {
         API.library.list(this.filter).then((res) => {
           this.domain = res.data

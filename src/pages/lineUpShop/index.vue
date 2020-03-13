@@ -16,7 +16,7 @@
               .fs-12.flex-1 {{item.library.name}}
             .df-row-jb.mt-10p.text-dark
               .fs-14.flex-1.text-overflow2 {{item.library.address}}
-              .fs-14.ml-10p(style="color:#0066CC" @click="addNotes") 添加笔记
+              .fs-14.ml-10p(style="color:#0066CC" @click="addNotes(item)") 添加笔记
 
 
     van-toast#van-toast
@@ -63,9 +63,9 @@
       }
     },
     methods: {
-      addNotes () {
+      addNotes (item) {
         wx.navigateTo({
-          url: '/pages/addNotes/main?bookId=' + this.domain.bookId
+          url: '/pages/addNotes/main?bookId=' + item.bookId
         })
       },
       changeRange (e) {

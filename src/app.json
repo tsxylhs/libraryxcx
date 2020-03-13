@@ -4,6 +4,7 @@
     "pages/kind/main",
     "pages/user/main",
     "pages/cart/main",
+    "pages/applyQrcode/main",
     "pages/order/main",
     "pages/addNotes/main",
     "pages/about/main",

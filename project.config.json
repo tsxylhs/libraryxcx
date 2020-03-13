@@ -141,6 +141,18 @@
 					"pathName": "pages/user/main",
 					"query": "scene=shopId%3D1218817488335147008",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/addNotes/main",
+					"pathName": "pages/addNotes/main",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/applyQrcode/main",
+					"pathName": "pages/applyQrcode/main",
+					"scene": null
 				}
 			]
 		}

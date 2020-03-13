@@ -1,86 +1,95 @@
 <template lang="pug">
-  .w-100(style="min-height: 100%")
-    nav-bar(:title="'添加读书笔记'" :backVisible="true" :home-path="'/pages/index/main'")
-    .p-10p
-      .pf-title 请填写以下读书信息
-        .px-10p.pt-20p.text-3(style="font-size: 14px") 书名
-        van-field(required clearable placeholder="输入书名名称" v-model="domain.name" @blur="handleName" :error-message="errMessage.name")
-        .px-10p.pt-20p.text-3(style="font-size: 14px") 作者
-        van-field(required clearable  placeholder="请输入作者" v-model="domain.author" @blur="handleauthor")
-        .px-10p.pt-20p.text-3(style="font-size: 14px") 内容
-        van-field(required clearable  placeholder="请输入内容"  v-model="domain.text" @blur="handleText"   type='textarea')
+  .w-100
+    nav-bar(:title="'添加读书笔记'" :back-visible="true" :home-path="'/pages/index/main'")
+    van-cell-group
+      van-field(required clearable label="书名" placeholder="输入书名" v-model="notes.bookName" @change="handlebookname" :error-message="errMessage.name")
+      van-field( clearable label="作者"  placeholder="请输入作者" v-model="notes.bookAuthor" @blur="handlebookAuthor" )
+      van-field( clearable label="主题"  placeholder="请输入主题" v-model="notes.title" @change="handleTheme")
+      van-field(clearable label="内容"   v-model="notes.desc" @change="handleDesc"  type='textarea', placeholder='请输入内容', autosize='true', border='')
+    .mt-20p.w-90.m-auto
+      van-button(size="large" round custom-class="btn-black" @click="onSave") 保存
 
 </template>
 
 <script>
-  import NavBar from '@/components/NavBar.vue'
-  import Data from '@/utils/data'
   import API from '@/api/api'
-  import {loginInfo} from '../../utils/login'
-  import Moment from 'moment'
+  import NavBar from '@/components/NavBar.vue'
+  import AreaList from '@/utils/area'
 
   export default {
-    components: {NavBar},
+    name: 'InfForm',
+    components: {
+      NavBar
+    },
     data () {
       return {
-        isLogged: false,
-        active: 0,
-        data: Data,
-        myOrders: [],
-        epOrder: true
+        user: {},
+        notes: {},
+        userId: '',
+        errMessage: {
+          name: '',
+          mobile: ''
+        },
+        areaList: AreaList,
+        show: false
+
       }
     },
-    onShareAppMessage (object) {
-      object.title = '在线ELB'
-      object.path = '/pages/index/main'
-      object.imageUrl = 'https://mtms.letsit.vip/share.jpg'
-      return object
-    },
-    watch: {},
     methods: {
-      checkUser (e) {
-        loginInfo(e, this, this.loadNotes)
+      handlebookname (event) {
+        this.notes.bookName = event.mp.detail
       },
-      loadNotes (options) {
-        let user = wx.getStorageSync('user')
-        let params = {ps: 20, userId: user.id}
-        params = Object.assign(params, options)
-        API.order.list(params).then(res => {
-          this.isLogged = true
-          if (res.data === undefined || res.data.length <= 0) {
-            this.epOrder = true
-            console.log('没有订单')
-          } else {
-            this.myOrders = res.data
-            res.data.forEach(order => {
-              if (order.createdAt && order.isQueue) {
-                order.createdAt = Moment(order.createdAt).format('YYYY-MM-DD HH:mm')
-              }
-            })
-            console.log('有订单')
-            this.epOrder = false
-          }
+      handlebookAuthor (event) {
+        this.notes.bookAuthor = event.mp.detail
+      },
+      handleTheme (event) {
+        this.notes.title = event.mp.detail
+      },
+      handleDesc (event) {
+        this.notes.desc = event.mp.detail
+      },
+      getBook (id) {
+        API.books.get(id).then((res) => {
+          debugger
+          this.notes.bookName = res.name
+          this.notes.bookAuthor = res.author
         }).catch((err) => {
-          console.log('err', err)
+          console.log(err)
+        })
+      },
+      handleEmail (event) {
+        this.user.email = event.mp.detail
+      },
+      loadUser (id) {
+        API.user.get(id).then((res) => {
+          this.user = res
+          console.log('this.user', this.user)
+        }).catch(() => {
+        })
+      },
+      onSave () {
+        API.notes.create(this.notes).then((res) => {
+          console.log('success')
+        }).catch(() => {
+          console.log('error')
         })
       }
     },
     mounted () {
-      // let user = wx.getStorageSync('user')
-      // if (user) {
-      // this.loadOrders()
-      // }
+      if (this.$root.$mp.query.bookId) {
+        this.getBook(this.$root.$mp.query.bookId)
+      } else {
+      }
     },
     onShow () {
-      let bookId = this.$mp.query.bookId
-      if (bookId) {
-        console.log(bookId)
+      if (this.$root.$mp.query.bookId) {
+        this.getBook(this.$root.$mp.query.bookId)
       } else {
-        console.log('new')
       }
     }
   }
 </script>
 
 <style scoped>
+
 </style>

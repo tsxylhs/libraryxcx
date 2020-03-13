@@ -10,8 +10,8 @@
           .ml-20p.flex-1
             .df-row-ac.text-overflow250
               .pf-title {{library.name}}
-              .arrow.ml-5p
               div 去这里
+              .arrow.ml-5p
             .mt-5p.d-flex
               div
                 .location
@@ -21,6 +21,7 @@
                 .time-bg
               .ml-5p 营业时间: 周一至周日
       .shadow-bg
+      van-notice-bar(left-icon='https://img.yzcdn.cn/1.png', text='闭馆通知:为做好防控疫情发展，抑制病毒传播，本图书馆将闭馆，开馆时间另行通知')
       div
         van-search(@search="search" placeholder="搜索图书")
     .van-tree-select.flex-1

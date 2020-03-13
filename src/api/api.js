@@ -20,12 +20,15 @@ API.shop = crud('/v1/shop')
 API.headerImage = crud('/v1/headerImages')
 API.bdshop = crud('v1/shop')
 API.queueup = crud('/v1/queueup')
-
+API.apply = crud('v1/apply')
 API.login = function (param) {
   return fly.post('/v1/user/login', param)
 }
 API.books.updatebooks = function (param) {
   return fly.post('/v1/book/update', param)
+}
+API.books.applylibrary = function (id) {
+  return fly.get('/v1/applylibrary/' + id)
 }
 
 API.user.update = function (params) {
