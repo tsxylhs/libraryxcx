@@ -8,10 +8,10 @@
           .mt-10p.text-black 我的借阅
         .flex-1.df-col-ac.px-10p.border-right(@click="toLinelibrary")
           .icon-qrcode
-          .mt-10p.text-black 出示二维码
+          .mt-10p.text-black 二维码
         .flex-1.df-col-ac.px-10p.border-right(@click="toLineUpShop('queue')")
           .calendar
-          .mt-10p.text-black 去预约位置
+          .mt-10p.text-black 预约位置
         div.flex-1.df-col-ac(@click="toQueue")
           .df-col-ac.px-10p
             .order(style="position: relative")

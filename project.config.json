@@ -146,12 +146,20 @@
 					"id": -1,
 					"name": "pages/addNotes/main",
 					"pathName": "pages/addNotes/main",
+					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "pages/applyQrcode/main",
 					"pathName": "pages/applyQrcode/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/main",
+					"pathName": "pages/order/main",
 					"scene": null
 				}
 			]

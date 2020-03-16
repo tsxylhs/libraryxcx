@@ -1,6 +1,6 @@
 <template lang="pug">
   .w-100
-    nav-bar(:title="'添加读书笔记'" :back-visible="true" :home-path="'/pages/index/main'")
+    nav-bar(:title="title" :back-visible="true" :home-path="'/pages/index/main'")
     van-cell-group
       van-field(required clearable label="书名" placeholder="输入书名" v-model="notes.bookName" @change="handlebookname" :error-message="errMessage.name")
       van-field( clearable label="作者"  placeholder="请输入作者" v-model="notes.bookAuthor" @blur="handlebookAuthor" )
@@ -24,6 +24,7 @@
     data () {
       return {
         user: {},
+        title: '添加读书笔记',
         notes: {},
         userId: '',
         errMessage: {
@@ -68,23 +69,44 @@
         })
       },
       onSave () {
-        API.notes.create(this.notes).then((res) => {
-          console.log('success')
+        let user = wx.getStorageSync('user')
+        this.notes.userId = user.id
+        var api = this.notes.id ? API.notes.update : API.notes.create
+        api(this.notes).then((res) => {
+          wx.switchTab({
+            url: '/pages/order/main'
+          })
         }).catch(() => {
-          console.log('error')
+          wx.switchTab({
+            url: '/pages/order/main'
+          })
+        })
+      },
+      getNotes (id) {
+        API.notes.get(id).then((res) => {
+          this.title = '查看/修改读书笔记'
+          this.notes = res
+        }).catch(() => {
         })
       }
     },
     mounted () {
+      this.notes = {}
       if (this.$root.$mp.query.bookId) {
         this.getBook(this.$root.$mp.query.bookId)
       } else {
+        if (this.$root.$mp.query.notesId) {
+          this.getNotes(this.$root.$mp.query.notesId)
+        }
       }
     },
     onShow () {
       if (this.$root.$mp.query.bookId) {
         this.getBook(this.$root.$mp.query.bookId)
       } else {
+        if (this.$root.$mp.query.notesId) {
+          this.getNotes(this.$root.$mp.query.notesId)
+        }
       }
     }
   }

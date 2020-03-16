@@ -11,7 +11,7 @@
           div.df-row-jb
             .fs-16.flex-1(style="font-weight:bold") {{item.name}}
             .fs-13.flex-1.text-pink(v-if="item.apply.id==='0'" @click="toapply(item)") 申请二维码
-            .fs-13.flex-1.text-dark(v-else @click="apply(item)") 出示二维码
+            .fs-13.flex-1.text-dark(v-else @click="ShowCodes(item)") 出示二维码
           .df-row-jb.mt-10p.text-dark
             .fs-14.flex-1.text-overflow2 {{item.address}}
             .fs-14.ml-10p {{item.distanceDisplay }}
@@ -22,7 +22,9 @@
           van-field( clearable label="学院"  placeholder="请输入学院" v-model="apply.school" @change="handleschool")
           van-field( clearable label="班级" placeholder="输入班级" v-model="apply.calss" @change="handleclass")
           van-field(required clearable label="电话"  placeholder="请输入电话" v-model="apply.phone" @change="handlephone" )
-          van-button(size="large" round custom-class="btn-blue" @click="submint") 确认借阅
+          van-button(size="large" round custom-class="btn-blue" @click="submint") 确认申请
+      van-popup(:show="showCode", position="center",overlay="false", @close="applyClose" safe-area-inset-top="true" custom-style="width: 90%;height: 300px;border-radius: 10px !important;")
+        img(:src="image" style="width: 100%;height: 300px")
 </template>
 
 <script>
@@ -39,14 +41,18 @@
         apply: {},
         addapplyFlag: false,
         user: {},
+        showCode: false,
         domain: {},
         userId: '',
-        item: {}
+        item: {},
+        image: ''
       }
     },
     methods: {
-      apply (item) {
+      ShowCodes (item) {
+        this.showCode = true
       },
+
       handlenum (event) {
         this.apply.num = event.mp.detail
       },
@@ -63,6 +69,7 @@
         this.apply.phone = event.mp.detail
       },
       applyClose () {
+        this.showCode = false
         this.addapplyFlag = false
       },
       toapply (item) {
@@ -90,6 +97,7 @@
       this.getlibrarys()
     },
     onShow () {
+      this.image = '../../static/images/show.png'
       this.user = wx.getStorageSync('user')
       this.getlibrarys()
     }

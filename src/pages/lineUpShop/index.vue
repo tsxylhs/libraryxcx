@@ -16,6 +16,7 @@
               .fs-12.flex-1 {{item.library.name}}
             .df-row-jb.mt-10p.text-dark
               .fs-14.flex-1.text-overflow2 {{item.library.address}}
+              .fs-14.ml-10p(style="color:#0066CC" @click="deleteNotes(item)") 归还
               .fs-14.ml-10p(style="color:#0066CC" @click="addNotes(item)") 添加笔记
 
 
@@ -63,6 +64,12 @@
       }
     },
     methods: {
+      deleteNotes (item) {
+        API.mybooks.delete(item.id).then((res) => {
+          console.log(res)
+        }).catch(() => {
+        })
+      },
       addNotes (item) {
         wx.navigateTo({
           url: '/pages/addNotes/main?bookId=' + item.bookId
