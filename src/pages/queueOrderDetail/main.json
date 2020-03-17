@@ -1,7 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "van-popup": "../../../static/vant/popup/index",
-    "van-button": "../../../static/vant/button/index"
-  }
-}

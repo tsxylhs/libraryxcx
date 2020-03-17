@@ -23,54 +23,37 @@
               .text-red.pointer(@click="toOrder(0)")  全部
               .red-arrow
           .df-row-jb.mt-10p
-            .df-col-ac.pointer(@click="toOrder(1)")
+            //.df-col-ac.pointer(@click="toOrder(1)")
               .order1
-              .text-dark.mt-2 当前借阅
-            .df-col-ac.pointer(@click="toOrder(2)")
+              .text-dark.mt-2 当前借阅(待实现)
+            //.df-col-ac.pointer(@click="toOrder(2)")
               .order2
-              .text-dark.mt-2 历史借阅
-            .df-col-ac.pointer(@click="toOrder(4)")
+              .text-dark.mt-2 历史借阅(待实现)
+            //.df-col-ac.pointer(@click="toOrder(4)")
               .order4
-              .text-dark.mt-2 已逾期
-            .df-col-ac.pointer(@click="toOrder(4)")
+              .text-dark.mt-2 已逾期(待实现)
+            .df-col-ac.pointer(@click="scanQrCode")
               .order5
               .text-dark.mt-2 扫码开柜
       .pl-20p
       .pl-20p
-        .df-row-ac-jb.py-20p.border-bottom(@click="toAddress")
+        .df-row-ac-jb.py-20p.border-bottom(@click="toinfom")
           .df-row-ac
             .delivery
             span.ml-10p.fs-16 修改个人信息
           .arrow.pr-20p
       .pl-20p
-        .df-row-ac-jb.py-20p.border-bottom(@click="toInf")
+        .df-row-ac-jb.py-20p.border-bottom(@click="toAbout")
           .df-row-ac
             .info
             span.ml-10p.fs-16 关于ELB
           .arrow.pr-20p
-      div
-        canvas(canvas-id="shareCanvas" style="width: 400px; height: 500px;position:fixed;left:9000px;")
-      .pl-20p(v-if="shop.state===3&&shop.bdMobile")
-        .df-row-ac-jb.py-20p.border-bottom(@click="callPhone")
-          .df-row-ac
-            .me-phone
-            span.ml-10p.fs-16 拨打销售电话
-          .arrow.pr-20p
-    van-dialog.dialogPop(use-slot='', :show='canvasDialog', show-cancel-button='', @cancel='onClose("canvasDialog")' @confirm='saveImage' cancel-button-text="取消" confirm-button-text="保存到相册" )
-      .df-col-ac.py-20p
-        image(:src="imageurl" style="width: 400px; height: 500px")
-      van-popup(:show='sharePop', position='bottom', overlay='true', @close="popClose('sharePop')" :close-on-click-overlay="true")
-        div
-          .text-center.w-100.shareBg.py-10p.border-bottom
-            button(open-type="share") 分享给朋友
-          .text-center.w-100.shareBg.py-10p
-            button(@click="sharePop = false") 关闭
-          //.border-bottom.text-center.w-100.shareBg.py-10p
-            div(@click="shareImage" ) 生成分享图片
+    van-toast#van-toast
 </template>
 <script>
   import NavBar from '@/components/NavBar.vue'
   import {loginInfo, CallPhone} from '../../utils/login'
+  import Toast from '../../../static/vant/toast/toast'
 
   export default {
     name: 'AlarmInfo',
@@ -153,6 +136,14 @@
       callFail (e) {
 
       },
+      scanQrCode () {
+        wx.scanCode({
+          success (res) {
+            console.log(res.result)
+            Toast(res.result + '门已开锁，请取走你的物品')
+          }
+        })
+      },
       completeSuccess (e) {
       },
       checkUser (e) {
@@ -183,21 +174,10 @@
       toOrder (item) {
         getApp().globalData.tabIndex = item
         wx.switchTab({
-          url: '/pages/order/main'
+          url: '/pages/mybook/main'
         })
       },
-      toAddress () {
-        if (!this.disable) {
-          return
-        }
-        wx.navigateTo({
-          url: '/pages/address/main?select=1'
-        })
-      },
-      toInf () {
-        if (!this.disable) {
-          return
-        }
+      toinfom () {
         wx.navigateTo({
           url: '/pages/infForm/main?userId=' + this.user.id
         })

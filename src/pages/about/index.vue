@@ -2,7 +2,7 @@
   .w-100
     nav-bar(:title="'关于ElB'" :backVisible="true" :home-path="'/pages/index/main'")
     .p-20p
-      .text-indent ElB是一个品牌化的生态B2B平台，链接全供应链渠道、最终实现产地到门店的无缝衔接。
+      .text-indent ElB是一个为学生提供网上预约，借阅图书，图书馆导航等功能。
 </template>
 
 <script>

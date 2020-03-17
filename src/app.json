@@ -1,16 +1,17 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/kind/main",
-    "pages/user/main",
-    "pages/cart/main",
-    "pages/applyQrcode/main",
-    "pages/order/main",
     "pages/addNotes/main",
     "pages/about/main",
-    "pages/queueOrderDetail/main",
-    "pages/lineUpShop/main",
-    "pages/queueOrderList/main"
+    "pages/notes/main",
+    "pages/applyQrcode/main",
+    "pages/kind/main",
+    "pages/user/main",
+    "pages/appointment/main",
+    "pages/queue/main",
+    "pages/mybook/main",
+    "pages/queueOrderList/main",
+    "pages/infForm/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -33,13 +34,13 @@
       },
       {
         "text": "预约",
-        "pagePath": "pages/cart/main",
+        "pagePath": "pages/queue/main",
         "iconPath": "static/images/yuyue.png",
         "selectedIconPath": "static/images/yuyue-2.png"
       },
       {
         "text": "读书笔记",
-        "pagePath": "pages/order/main",
+        "pagePath": "pages/notes/main",
         "iconPath": "static/tabs/orders.png",
         "selectedIconPath": "static/tabs/orders_current.png"
       },

@@ -5,22 +5,15 @@
       .p-20p.df-col-ac-jc.mt-50p(v-if="queues.length <= 0 || queues == undefined")
         .queue-none
         .pf-subhead.mt-10p 您当前暂无预约
-        .mt-10p 去发现
         .mt-10p.w-80
           van-button(size="large" round custom-class="btn-minEdit" @click="toLineUpShop") 查看可预约的图书馆
       .p-20p(v-else)
         .bg-white.pt-10p.shadow.borRadius-5.border.mt-40p(v-for="(q, i) in queues" :key="i")
           .text-center.p-10p(style="border-bottom: 1px dashed #ECEEF2")
-            .pf-subhead {{q.shop.name}}
+            .pf-subhead {{q.library.name}}
             .mt-10p.text-black 您的预约桌号
-            .mt-10p.pf-title {{q.queueNo}}
-          .p-20p.df-row-jb.border-bottom(v-if="q.queueProcess === 'waiting'")
-            .flex-1.border-right.df-col-ac
-              .text-red.pf-title {{q.waitingCount}}
-              .mt-10p 前方等待人数
-            .flex-1.df-col-ac
-              .text-red.pf-title {{q.waitingTime}}分钟
-              .mt-10p 预计等待时长
+            .mt-10p.pf-title {{q.site}}
+
           .my-20p.w-50.m-auto.text-center
             div(v-if="q.queueProcess === 'waiting'")
               van-button.w-50(size="large" round custom-class="btn-minEdit" @click="handleCancel(q)") 取消排队
@@ -38,17 +31,15 @@
                 div 非常抱歉，商家无法提供该服务
 
           .bg-dark.p-20p.borRadius-b
-            .text-black {{q.shop.name}}
+            .text-black {{q.library.name}}
             .mt-10p.d-flex
               div
                 .location.mr-5p
-              span {{q.shop.region + q.shop.address}}
-            .mt-10p.df-row-ac
-              .circle-phone.mr-5p
-              span 电话：{{q.shop.phoneNumber}}
-        .mt-20p.text-center 听到叫号请到前台，过号请重新取号
+              span {{q.library.address}}
+
+        .mt-20p.text-center 请准时到达
         .mt-30p.w-50.m-auto
-          van-button(size="large" round custom-class="btn-white" @click="toOrder") 查看历史排队
+          van-button(size="large" round custom-class="btn-white" @click="toOrder") 确认离开
         van-popup(:show='showPop', position='center', overlay='false', @close='onClose' safe-area-inset-top="true" custom-style="width: 70% !important")
           .borRadius-30
             .p-20p
@@ -64,17 +55,14 @@
       .df-col-ac.p-20p
         .login-none
         .mt-10p(v-if="!user") 请先登录，以查看预约。
-        .mt-10p(v-else-if="!(user.mobile || phoneNumber)") 查看排队订单,还需验证手机号
         button.btn-main.mt-10p(v-if="!user" open-type="getUserInfo" @getuserinfo="checkUser" lang="zh_CN" type="primary" round @click="checkUser") 微信授权登录
-        button.btn-main.mt-10p(v-else-if="!(user.mobile || phoneNumber)" open-type="getPhoneNumber" @getphonenumber="getPhone"  lang="zh_CN" type="primary") 手机授权
-
 
 </template>
 
 <script>
   import NavBar from '@/components/NavBar.vue'
   import API from '@/api/api'
-  import {loginInfo, getPhoneNumber} from '../../utils/login'
+  import {loginInfo} from '../../utils/login'
 
   export default {
     components: {
@@ -93,15 +81,12 @@
       }
     },
     methods: {
-      getPhone (e) {
-        getPhoneNumber(e, this.viewMyQueue)
-      },
       checkUser (e) {
         loginInfo(e, this, this.viewMyQueue)
       },
       toLineUpShop () {
         wx.navigateTo({
-          url: '/pages/lineUpShop/main'
+          url: '/pages/mybook/main'
         })
       },
       toShop (id) {
@@ -115,8 +100,9 @@
         })
       },
       toOrder () {
-        wx.switchTab({
-          url: '/pages/order/main'
+        API.apply.delete(this.user.id).then((res) => {
+          console.log(res)
+        }).catch(() => {
         })
       },
       handleCancel (order) {
@@ -126,33 +112,17 @@
       onClose () {
         this.showPop = false
       },
-      cancel () {
-        this.showPop = false
-        this.order.queueProcess = 'cancel'
-        API.order.update(this.order).then(res => {
-          console.log('res', res)
-          this.viewMyQueue()
-        })
-      },
-      resubmit (order) {
-        // debugger
-        order.queueProcess = 'waiting'
-        API.order.restart(order).then(res => {
-          console.log('res', res)
-          this.viewMyQueue()
-        }).catch(() => {
-
-        })
-      },
       viewMyQueue () {
         this.user = wx.getStorageSync('user')
-        this.phoneNumber = wx.getStorageSync('phoneNumber')
-        if (this.user && (this.user.mobile !== '' || this.phoneNumber !== '')) {
+        if (this.user) {
           this.isLogged = true
         }
-        let param = {phoneNumber: this.user.mobile, IsQueue: true}
+        let param = {
+          userId: this.user.id,
+          IsQueue: true
+        }
         param = Object.assign(this.filter, param)
-        API.order.queue(param).then(res => {
+        API.apply.list(param).then(res => {
           if (this.filter.p > 1) {
             this.queues.push(...res.data)
           } else {
@@ -184,7 +154,7 @@
       this.isLogged = false
       this.user = wx.getStorageSync('user')
       this.phoneNumber = wx.getStorageSync('phoneNumber')
-      if (this.user && (this.user.mobile !== '' || this.phoneNumber !== '')) {
+      if (this.user.id !== '0') {
         this.viewMyQueue()
         this.isLogged = true
       }
@@ -192,5 +162,5 @@
   }
 </script>
 
-<style >
+<style>
 </style>

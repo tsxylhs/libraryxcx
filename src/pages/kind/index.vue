@@ -114,7 +114,7 @@
           endTime: this.endTime
         }
 
-        API.books.updatebooks(params).then((res) => {
+        API.mybooks.updatebooks(params).then((res) => {
           this.addBorrowFlag = false
           this.loadData()
           Toast('借阅成功， 请到我的借阅中查看')

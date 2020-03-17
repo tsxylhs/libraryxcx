@@ -3,7 +3,7 @@
     nav-bar(title="我的借阅" :backVisible="true" :home-path="'/pages/index/main'")
     .p-10p
 
-      .mt-20p.df-col-ac-jc(v-if="domain.length === 0")
+      .mt-20p.df-col-ac-jc(v-if="domain.length === 0&&user")
         span 暂无借阅图书
         span 好好学习，天天向上
       .first-padding
@@ -18,6 +18,11 @@
               .fs-14.flex-1.text-overflow2 {{item.library.address}}
               .fs-14.ml-10p(style="color:#0066CC" @click="deleteNotes(item)") 归还
               .fs-14.ml-10p(style="color:#0066CC" @click="addNotes(item)") 添加笔记
+      .w-100.mt-50p(v-if="!user")
+        .df-col-ac.p-20p
+          .login-none
+          .mt-10p 请先登录，以查看借阅。
+          button.btn-main.mt-10p(v-if="!user" open-type="getUserInfo" @getuserinfo="checkUser" lang="zh_CN" type="primary" round @click="checkUser") 微信授权登录
 
 
     van-toast#van-toast
@@ -28,6 +33,7 @@
   import Swiper from '@/components/swiper'
   import Data from '@/utils/data'
   import API from '@/api/api'
+  import {loginInfo} from '../../utils/login'
   // import {loginInfo} from '../../utils/login'
 
   export default {
@@ -64,6 +70,9 @@
       }
     },
     methods: {
+      checkUser (e) {
+        loginInfo(e, this, this.getBooks)
+      },
       deleteNotes (item) {
         API.mybooks.delete(item.id).then((res) => {
           console.log(res)

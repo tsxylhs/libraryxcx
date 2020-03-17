@@ -17,7 +17,7 @@ fly.interceptors.response.use(
 //   '/v1/saleAttrs',
 //   '/v1/categories',
 //   '/v1/mer_shop',
-//   '/v1/order',
+//   '/v1/notes',
 //   '/v1/orders',
 //   '/v1/cart',
 //   '/v1/headerImages']

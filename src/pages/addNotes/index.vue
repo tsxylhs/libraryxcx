@@ -74,11 +74,11 @@
         var api = this.notes.id ? API.notes.update : API.notes.create
         api(this.notes).then((res) => {
           wx.switchTab({
-            url: '/pages/order/main'
+            url: '/pages/notes/main'
           })
         }).catch(() => {
           wx.switchTab({
-            url: '/pages/order/main'
+            url: '/pages/notes/main'
           })
         })
       },
@@ -91,7 +91,6 @@
       }
     },
     mounted () {
-      this.notes = {}
       if (this.$root.$mp.query.bookId) {
         this.getBook(this.$root.$mp.query.bookId)
       } else {
